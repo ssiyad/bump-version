@@ -20,8 +20,7 @@ pub fn commit(old_version: &Version, new_version: &Version) {
     // Construct the commit message.
     let message = format!(
         "chore: bump version from {} to {}",
-        old_version.to_string(),
-        new_version.to_string()
+        old_version, new_version,
     );
 
     // Get the head commit.
