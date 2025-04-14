@@ -18,7 +18,7 @@
 - [x] Return new version
 
 * 0.4
-- [ ] Write new version to `package.json`
+- [x] Write new version to `package.json`
 - [ ] Get `package.json` from git root if not in current directory
 
 * 0.5
