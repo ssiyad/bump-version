@@ -1,8 +1,8 @@
 * 0.1
-- [ ] Get current version from args
-- [ ] Calculate major, minor, patch
-- [ ] Bump patch version
-- [ ] Return new version
+- [x] Get current version from args
+- [x] Calculate major, minor, patch
+- [x] Bump patch version
+- [x] Return new version
 
 * 0.2
 - [ ] Get which version to bump
