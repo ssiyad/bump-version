@@ -11,11 +11,11 @@
 - [x] Return new version
 
 * 0.3
-- [ ] Parse `package.json`
-- [ ] Get current version from `package.json`
-- [ ] Calculate major, minor, patch
-- [ ] Bump selected version
-- [ ] Return new version
+- [x] Parse `package.json`
+- [x] Get current version from `package.json`
+- [x] Calculate major, minor, patch
+- [x] Bump selected version
+- [x] Return new version
 
 * 0.4
 - [ ] Write new version to `package.json`
