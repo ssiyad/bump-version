@@ -1,4 +1,4 @@
-use super::version::Version;
+use crate::version::Version;
 
 pub fn bump(version: Version, bump_type: &str) -> Version {
     match bump_type {

@@ -1,4 +1,4 @@
-use super::version::Version;
+use crate::version::Version;
 
 pub fn parse(version: &str) -> Version {
     let mut version_parts = version.split('.').collect::<Vec<_>>();
