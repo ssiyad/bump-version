@@ -1,36 +1,16 @@
+use super::get_path;
 use crate::version::Version;
-use git2::Repository;
 use indexmap::IndexMap;
 use std::fs;
 
-/// Get the path to the package.json file. Looks first in the current directory, then in the git
-/// repository root.
-fn get_path() -> String {
-    // Define `package.json` name.
-    let package_json = "package.json".to_string();
-
-    // If the file exists, return its path.
-    if fs::exists(&package_json).is_ok_and(|exists| exists) {
-        return package_json;
-    }
-
-    // Find git repository.
-    let repo = Repository::discover(".").expect("Unable to discover repository");
-
-    // Construct and return the path to the package.json file in git repo root.
-    repo.path()
-        .parent()
-        .expect("Unable to get parent directory")
-        .join(package_json)
-        .to_str()
-        .expect("Unable to convert path to string")
-        .to_string()
-}
+// Define the name of the package.json file.
+const PACKAGE_JSON: &str = "package.json";
 
 /// Parse the package.json file and return its contents as an IndexMap.
 fn parse() -> IndexMap<String, serde_json::Value> {
     // Read the package.json file.
-    let content = fs::read(get_path()).expect("Unable to read file");
+    let path = get_path(PACKAGE_JSON);
+    let content = fs::read(path).expect("Unable to read file");
 
     // Parse and return package.json.
     serde_json::from_slice(&content).expect("Unable to parse JSON")
@@ -68,5 +48,6 @@ pub fn update_version(version: &Version) {
     let content = serde_json::to_vec_pretty(&package).expect("Unable to serialize JSON");
 
     // Write the updated package.json back to the file.
-    fs::write(get_path(), content).expect("Unable to write file");
+    let path = get_path(PACKAGE_JSON);
+    fs::write(path, content).expect("Unable to write file");
 }
