@@ -4,7 +4,7 @@ use crate::version::Version;
 ///
 /// * `version`: The current version number.
 /// * `bump_type`: The type of bump to perform ("major", "minor", or "patch").
-pub fn bump(version: Version, bump_type: &str) -> Version {
+pub fn bump(version: &Version, bump_type: &str) -> Version {
     match bump_type {
         "major" => Version {
             major: version.major + 1,
@@ -36,7 +36,7 @@ mod tests {
             minor: 2,
             patch: 3,
         };
-        let bumped = bump(version, "major");
+        let bumped = bump(&version, "major");
         assert_eq!(bumped.major, 2);
         assert_eq!(bumped.minor, 0);
         assert_eq!(bumped.patch, 0);
@@ -49,7 +49,7 @@ mod tests {
             minor: 2,
             patch: 3,
         };
-        let bumped = bump(version, "minor");
+        let bumped = bump(&version, "minor");
         assert_eq!(bumped.major, 1);
         assert_eq!(bumped.minor, 3);
         assert_eq!(bumped.patch, 0);
@@ -62,7 +62,7 @@ mod tests {
             minor: 2,
             patch: 3,
         };
-        let bumped = bump(version, "patch");
+        let bumped = bump(&version, "patch");
         assert_eq!(bumped.major, 1);
         assert_eq!(bumped.minor, 2);
         assert_eq!(bumped.patch, 4);

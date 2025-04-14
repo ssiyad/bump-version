@@ -29,9 +29,6 @@ fn get_path() -> String {
 
 /// Parse the package.json file and return its contents as an IndexMap.
 fn parse() -> IndexMap<String, serde_json::Value> {
-    let path = get_path();
-    dbg!(path);
-
     // Read the package.json file.
     let content = fs::read(get_path()).expect("Unable to read file");
 

@@ -22,7 +22,7 @@
 - [x] Get `package.json` from git root if not in current directory
 
 * 0.5
-- [ ] Commit version changes
+- [x] Commit version changes
 - [ ] Create a tag for the new version
 - [ ] Push changes to remote (maybe)
 
