@@ -24,19 +24,14 @@
 * 0.5
 - [x] Commit version changes
 - [x] Create a tag for the new version
-- [ ] Push changes to remote (maybe)
+- [ ] `cargo.toml` support
 
 * 0.6
 - [ ] `--dry-run` option
 - [ ] `--no-commit` option
 - [ ] `--no-tag` option
-- [ ] `--no-push` option (maybe)
 
 * 0.7
-- [ ] `cargo.toml` support
-- [ ] `pyproject.toml` support
-
-* 0.8
 - [ ] Configurable files
 - [ ] Configurable versioning scheme
 - [ ] Configurable commit message
