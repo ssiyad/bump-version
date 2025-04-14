@@ -49,3 +49,24 @@ pub fn commit(old_version: &Version, new_version: &Version) {
     )
     .expect("Unable to commit changes");
 }
+
+/// Create a tag for the new version in the git repository.
+///
+/// * `new_version`: The new version to tag.
+pub fn tag(new_version: &Version) {
+    // Get the repository.
+    let repo = Repository::discover(".").expect("Unable to discover repository");
+
+    // Get the head commit.
+    let target = repo.revparse_single("HEAD").expect("Unable to get HEAD");
+
+    // Get signature.
+    let signature = repo.signature().expect("Unable to get git signature");
+
+    // Get tag.
+    let tag = format!("v{}", new_version);
+
+    // Create the tag.
+    repo.tag(&tag, &target, &signature, "", false)
+        .expect("Unable to create tag");
+}

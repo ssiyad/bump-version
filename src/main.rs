@@ -11,5 +11,6 @@ fn main() {
     let bumped = current.bump(&bump_type);
     package_json::update_version(&bumped);
     actions::commit(&current, &bumped);
+    actions::tag(&bumped);
     println!("Bumped version: {}", bumped);
 }

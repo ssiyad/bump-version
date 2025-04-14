@@ -23,7 +23,7 @@
 
 * 0.5
 - [x] Commit version changes
-- [ ] Create a tag for the new version
+- [x] Create a tag for the new version
 - [ ] Push changes to remote (maybe)
 
 * 0.6
