@@ -5,10 +5,10 @@
 - [x] Return new version
 
 * 0.2
-- [ ] Get which version to bump
-- [ ] Calculate major, minor, patch
-- [ ] Bump selected version
-- [ ] Return new version
+- [x] Get which version to bump
+- [x] Calculate major, minor, patch
+- [x] Bump selected version
+- [x] Return new version
 
 * 0.3
 - [ ] Parse `package.json`
