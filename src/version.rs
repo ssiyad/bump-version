@@ -4,6 +4,32 @@ pub struct Version {
     pub patch: u32,
 }
 
+impl Version {
+    /// Bumps the version number based on the specified bump type.
+    ///
+    /// * `bump_type`: The type of bump to perform ("major", "minor", or "patch").
+    pub fn bump(&self, bump_type: &str) -> Version {
+        match bump_type {
+            "major" => Version {
+                major: self.major + 1,
+                minor: 0,
+                patch: 0,
+            },
+            "minor" => Version {
+                major: self.major,
+                minor: self.minor + 1,
+                patch: 0,
+            },
+            "patch" => Version {
+                major: self.major,
+                minor: self.minor,
+                patch: self.patch + 1,
+            },
+            _ => panic!("Invalid bump type"),
+        }
+    }
+}
+
 impl From<&str> for Version {
     fn from(version_str: &str) -> Self {
         let parts: Vec<&str> = version_str.split('.').collect();
@@ -49,5 +75,44 @@ mod tests {
     #[test]
     fn test_invalid_version() {
         let _ = Version::from("1.2");
+    }
+
+    #[test]
+    fn test_bump_major() {
+        let version = Version {
+            major: 1,
+            minor: 2,
+            patch: 3,
+        };
+        let bumped = version.bump("major");
+        assert_eq!(bumped.major, 2);
+        assert_eq!(bumped.minor, 0);
+        assert_eq!(bumped.patch, 0);
+    }
+
+    #[test]
+    fn test_bump_minor() {
+        let version = Version {
+            major: 1,
+            minor: 2,
+            patch: 3,
+        };
+        let bumped = version.bump("minor");
+        assert_eq!(bumped.major, 1);
+        assert_eq!(bumped.minor, 3);
+        assert_eq!(bumped.patch, 0);
+    }
+
+    #[test]
+    fn test_bump_patch() {
+        let version = Version {
+            major: 1,
+            minor: 2,
+            patch: 3,
+        };
+        let bumped = version.bump("patch");
+        assert_eq!(bumped.major, 1);
+        assert_eq!(bumped.minor, 2);
+        assert_eq!(bumped.patch, 4);
     }
 }
