@@ -1,3 +1,5 @@
+mod calc_version;
+
 fn main() {
-    println!("Hello, world!");
+    calc_version::parse("1.2.3");
 }
