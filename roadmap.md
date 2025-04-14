@@ -19,7 +19,7 @@
 
 * 0.4
 - [x] Write new version to `package.json`
-- [ ] Get `package.json` from git root if not in current directory
+- [x] Get `package.json` from git root if not in current directory
 
 * 0.5
 - [ ] Commit version changes
