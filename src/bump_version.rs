@@ -1,5 +1,9 @@
 use crate::version::Version;
 
+/// Bumps the version number based on the specified bump type.
+///
+/// * `version`: The current version number.
+/// * `bump_type`: The type of bump to perform ("major", "minor", or "patch").
 pub fn bump(version: Version, bump_type: &str) -> Version {
     match bump_type {
         "major" => Version {
