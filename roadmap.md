@@ -24,7 +24,7 @@
 * 0.5
 - [x] Commit version changes
 - [x] Create a tag for the new version
-- [ ] `cargo.toml` support
+- [x] `cargo.toml` support
 
 * 0.6
 - [ ] `--dry-run` option

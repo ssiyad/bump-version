@@ -1,6 +1,6 @@
 [package]
 name = "bump-version"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 
 [dependencies]
@@ -13,6 +13,10 @@ features = ["derive"]
 [dependencies.serde_json]
 version = "1.0"
 features = ["preserve_order"]
+
+[dependencies.toml]
+version = "0.8"
+features = ["indexmap", "preserve_order"]
 
 [dependencies.indexmap]
 version = "2.9"

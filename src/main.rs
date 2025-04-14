@@ -10,6 +10,9 @@ fn main() {
     let current = sources::package_json::get_version();
     let bumped = current.bump(&bump_type);
     sources::package_json::update_version(&bumped);
+    let current = sources::cargo_toml::get_version();
+    let bumped = current.bump(&bump_type);
+    sources::cargo_toml::update_version(&bumped);
     actions::commit(&current, &bumped);
     actions::tag(&bumped);
     println!("Bumped version: {}", bumped);
