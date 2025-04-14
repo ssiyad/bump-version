@@ -21,6 +21,12 @@
 - [ ] Write new version to `package.json`
 
 * 0.5
+- [ ] Commit version changes
+- [ ] Create a tag for the new version
+- [ ] Push changes to remote (maybe)
+
+* 0.6
 - [ ] Add `--dry-run` option
 - [ ] Add `--no-commit` option
 - [ ] Add `--no-tag` option
+- [ ] Add `--no-push` option (maybe)
