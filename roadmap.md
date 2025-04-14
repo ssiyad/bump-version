@@ -27,7 +27,16 @@
 - [ ] Push changes to remote (maybe)
 
 * 0.6
-- [ ] Add `--dry-run` option
-- [ ] Add `--no-commit` option
-- [ ] Add `--no-tag` option
-- [ ] Add `--no-push` option (maybe)
+- [ ] `--dry-run` option
+- [ ] `--no-commit` option
+- [ ] `--no-tag` option
+- [ ] `--no-push` option (maybe)
+
+* 0.7
+- [ ] `cargo.toml` support
+- [ ] `pyproject.toml` support
+
+* 0.8
+- [ ] Configurable files
+- [ ] Configurable versioning scheme
+- [ ] Configurable commit message
