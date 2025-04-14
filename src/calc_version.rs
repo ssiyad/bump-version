@@ -1,18 +1,4 @@
-pub struct Version {
-    pub major: u32,
-    pub minor: u32,
-    pub patch: u32,
-}
-
-impl std::fmt::Display for Version {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(
-            f,
-            "Major: {}. Minor: {}. Patch: {}.",
-            self.major, self.minor, self.patch
-        )
-    }
-}
+use super::version::Version;
 
 pub fn parse(version: &str) -> Version {
     let mut version_parts = version.split('.').collect::<Vec<_>>();
@@ -35,11 +21,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parse() {
+    fn test_parse_1_2_3() {
         let version = parse("1.2.3");
         assert_eq!(version.major, 1);
         assert_eq!(version.minor, 2);
         assert_eq!(version.patch, 3);
+    }
+
+    #[test]
+    fn test_parse_4_5_6() {
+        let version = parse("4.5.6");
+        assert_eq!(version.major, 4);
+        assert_eq!(version.minor, 5);
+        assert_eq!(version.patch, 6);
     }
 
     #[test]
