@@ -1,3 +1,4 @@
+use clap::command;
 use std::env;
 
 mod actions;
@@ -5,6 +6,7 @@ mod sources;
 mod version;
 
 fn main() {
+    command!().get_matches();
     let mut args = env::args().skip(1);
     let bump_type = args.next().unwrap_or("patch".to_string());
     let current = sources::package_json::get_version();

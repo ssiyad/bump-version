@@ -27,9 +27,9 @@
 - [x] `cargo.toml` support
 
 # 0.5.1
-- [+] Introduce an args parseb
-- [+] `--help` option
-- [ ] `--version` option
+- [x] Introduce an args parser
+- [x] `--help` option
+- [x] `--version` option
 
 # 0.5.2
 - [ ] Better error handling
