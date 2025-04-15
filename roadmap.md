@@ -43,3 +43,15 @@
 # 0.7
 - [x] `--package-json` option
 - [x] `--cargo-toml` option
+
+# 1.0
+- [ ] Readme
+- [ ] License
+
+# 1.1
+- [ ] Configuration file
+- [ ] Generic file handling
+
+# 1.2
+- [ ] Tag format
+- [ ] Commit message format
