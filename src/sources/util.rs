@@ -31,6 +31,7 @@ fn get_path(source: &str) -> Result<String, BumpVersionError> {
 }
 
 /// Parse the source file and return its contents as an IndexMap.
+// Note! Get rid of `toml::Value` as type.
 pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpVersionError> {
     // Read the source.
     let path = get_path(source)?;
