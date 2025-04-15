@@ -6,7 +6,7 @@ use log::info;
 /// Commit the version change to the git repository.
 pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVersionError> {
     // Get the repository.
-    let repo = Repository::discover("/Users")?;
+    let repo = Repository::discover(".")?;
 
     // Get git index;
     let mut index = repo.index()?;
