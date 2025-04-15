@@ -8,6 +8,7 @@ fn main() {
     let matches = command!()
         .arg(
             Arg::new("bump-type")
+                .value_parser(["major", "minor", "patch"])
                 .default_value("patch")
                 .help("Bump type"),
         )
