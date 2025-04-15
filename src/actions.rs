@@ -1,23 +1,21 @@
-use crate::version::Version;
+use crate::{error::BumpVersionError, version::Version};
 use colored::Colorize;
 use git2::{IndexAddOption, Repository};
 use log::info;
 
 /// Commit the version change to the git repository.
-pub fn commit(old_version: &Version, new_version: &Version) {
+pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVersionError> {
     // Get the repository.
-    let repo = Repository::discover(".").expect("Unable to discover repository");
+    let repo = Repository::discover("/Users")?;
 
     // Get git index;
-    let mut index = repo.index().expect("Unable to get git index");
+    let mut index = repo.index()?;
 
     // Stage all changes.
-    index
-        .add_all(["*"].iter(), IndexAddOption::DEFAULT, None)
-        .expect("Unable to stage changes");
+    index.add_all(["*"].iter(), IndexAddOption::DEFAULT, None)?;
 
     // Confirm stage.
-    index.write().expect("Unable to write index");
+    index.write()?;
     info!("Staged changes");
 
     // Construct the commit message.
@@ -27,56 +25,57 @@ pub fn commit(old_version: &Version, new_version: &Version) {
     );
 
     // Get the head commit.
-    let head = repo.head().expect("Unable to get git head");
+    let head = repo.head()?;
 
     // Get the parent commit.
-    let parent = head.peel_to_commit().expect("Unable to peel to commit");
+    let parent = head.peel_to_commit()?;
 
     // Get the oid of the root tree.
-    let oid = index.write_tree().expect("Unable to write tree");
+    let oid = index.write_tree()?;
 
     // Get the signature.
-    let signature = repo.signature().expect("Unable to get git signature");
+    let signature = repo.signature()?;
 
     // Get the tree from the index.
-    let tree = repo.find_tree(oid).expect("Unable to find tree");
+    let tree = repo.find_tree(oid)?;
 
     // Commit with message.
-    let commit = repo
-        .commit(
-            Some("HEAD"),
-            &signature,
-            &signature,
-            &message,
-            &tree,
-            &[&parent],
-        )
-        .expect("Unable to commit changes");
+    let commit = repo.commit(
+        Some("HEAD"),
+        &signature,
+        &signature,
+        &message,
+        &tree,
+        &[&parent],
+    )?;
 
     // Print success message.
     info!("Created commit: {}", commit.to_string().yellow());
+
+    Ok(())
 }
 
 /// Create a tag for the new version in the git repository.
 ///
 /// * `new_version`: The new version to tag.
-pub fn tag(new_version: &Version) {
+pub fn tag(new_version: &Version) -> Result<(), BumpVersionError> {
     // Get the repository.
-    let repo = Repository::discover(".").expect("Unable to discover repository");
+    let repo = Repository::discover(".")?;
 
     // Get the head commit.
-    let target = repo.revparse_single("HEAD").expect("Unable to get HEAD");
+    let target = repo.revparse_single("HEAD")?;
 
     // Get signature.
-    let signature = repo.signature().expect("Unable to get git signature");
+    let signature = repo.signature()?;
 
     // Get tag.
     let tag = format!("v{}", new_version);
 
     // Create the tag.
-    repo.tag(&tag, &target, &signature, "", false)
-        .expect("Unable to create tag");
+    repo.tag(&tag, &target, &signature, "", false)?;
 
     // Print success message.
     info!("Created tag: {}", tag.yellow());
+
+    Ok(())
 }

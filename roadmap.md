@@ -32,7 +32,7 @@
 - [x] `--version` option
 
 # 0.5.2
-- [ ] Better error handling
+- [x] Better error handling
 - [x] Better debug and info messages (Logging)
 
 # 0.6

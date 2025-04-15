@@ -1,3 +1,4 @@
+use crate::error::BumpVersionError;
 use colored::Colorize;
 use git2::Repository;
 use indexmap::IndexMap;
@@ -7,36 +8,39 @@ use std::fs;
 /// Get the path to the `source` file. Looks first in the current directory, then in the git root.
 ///
 /// * `source`: The source name.
-fn get_path(source: &str) -> String {
+fn get_path(source: &str) -> Result<String, BumpVersionError> {
     // If the file exists, return its path.
     if fs::exists(source).is_ok_and(|exists| exists) {
-        return source.to_string();
+        return Ok(source.to_string());
     }
 
     // Find git repository.
-    let repo = Repository::discover(".").expect("Unable to discover repository");
+    let repo = Repository::discover(".")?;
 
     // Construct and return the path to the package.json file in git repo root.
-    repo.path()
+    let path = repo
+        .path()
         .parent()
-        .expect("Unable to get parent directory")
+        .ok_or(BumpVersionError::Other("Unable to get parent directory"))?
         .join(source)
         .to_str()
-        .expect("Unable to convert path to string")
-        .to_string()
+        .ok_or(BumpVersionError::Other("Unable to convert path to string"))?
+        .to_string();
+
+    Ok(path)
 }
 
 /// Parse the source file and return its contents as an IndexMap.
-pub fn parse_source(source: &str) -> IndexMap<String, toml::Value> {
+pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpVersionError> {
     // Read the source.
-    let path = get_path(source);
-    let content = std::fs::read_to_string(path).expect("Unable to read file");
+    let path = get_path(source)?;
+    let content = std::fs::read_to_string(path)?;
 
     // Parse and return source.
     let parsed = match source.split(".").last().unwrap_or("toml") {
-        "toml" => toml::from_str(&content).expect("Unable to parse TOML"),
-        "json" => serde_json::from_str(&content).expect("Unable to parse JSON"),
-        _ => panic!("Unsupported source file type"),
+        "toml" => toml::from_str(&content).map_err(BumpVersionError::from),
+        "json" => serde_json::from_str(&content).map_err(BumpVersionError::from),
+        _ => Err(BumpVersionError::Other("Unsupported file type")),
     };
 
     debug!("Parsed source: {}", source.yellow());
@@ -47,8 +51,9 @@ pub fn parse_source(source: &str) -> IndexMap<String, toml::Value> {
 ///
 /// * `source`: The source name.
 /// * `content`: The content to write to the source file.
-pub fn write_source(source: &str, content: &str) {
-    let path = get_path(source);
-    std::fs::write(path, content).expect("Unable to write file");
+pub fn write_source(source: &str, content: &str) -> Result<(), BumpVersionError> {
+    let path = get_path(source)?;
+    std::fs::write(path, content)?;
     debug!("Wrote source: {}", source.yellow());
+    Ok(())
 }
