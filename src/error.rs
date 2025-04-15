@@ -2,6 +2,9 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum BumpVersionError {
+    #[error("No source specified")]
+    NoSourceSpecified,
+
     #[error("Git: {0}")]
     Git(#[from] git2::Error),
 

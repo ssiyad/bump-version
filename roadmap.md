@@ -41,5 +41,5 @@
 - [x] `--no-tag` option
 
 # 0.7
-- [ ] `--package-json` option
-- [ ] `--cargo-toml` option
+- [x] `--package-json` option
+- [x] `--cargo-toml` option
