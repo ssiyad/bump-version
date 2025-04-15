@@ -41,6 +41,5 @@
 - [x] `--no-tag` option
 
 # 0.7
-- [ ] Configurable files
-- [ ] Configurable versioning scheme
-- [ ] Configurable commit message
+- [ ] `--package-json` option
+- [ ] `--cargo-toml` option
