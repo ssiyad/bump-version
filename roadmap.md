@@ -36,9 +36,9 @@
 - [x] Better debug and info messages (Logging)
 
 # 0.6
-- [ ] `--dry-run` option
-- [ ] `--no-commit` option
-- [ ] `--no-tag` option
+- [x] `--dry-run` option
+- [x] `--no-commit` option
+- [x] `--no-tag` option
 
 # 0.7
 - [ ] Configurable files
