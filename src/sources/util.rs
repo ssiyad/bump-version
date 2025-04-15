@@ -37,9 +37,9 @@ pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpV
     let content = std::fs::read_to_string(path)?;
 
     // Parse and return source.
-    let parsed = match source.split(".").last().unwrap_or("toml") {
-        "toml" => toml::from_str(&content).map_err(BumpVersionError::from),
-        "json" => serde_json::from_str(&content).map_err(BumpVersionError::from),
+    let parsed = match source.split(".").last() {
+        Some("toml") => toml::from_str(&content).map_err(BumpVersionError::from),
+        Some("json") => serde_json::from_str(&content).map_err(BumpVersionError::from),
         _ => Err(BumpVersionError::Other("Unsupported file type")),
     };
 
