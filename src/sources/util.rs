@@ -26,12 +26,16 @@ fn get_path(source: &str) -> String {
 
 /// Parse the source file and return its contents as an IndexMap.
 pub fn parse_source(source: &str) -> IndexMap<String, toml::Value> {
-    // Read the cargo.toml file.
+    // Read the source.
     let path = get_path(source);
     let content = std::fs::read_to_string(path).expect("Unable to read file");
 
-    // Parse and return cargo.toml.
-    toml::from_str(&content).expect("Unable to parse TOML")
+    // Parse and return source.
+    match source.split(".").last().unwrap_or("toml") {
+        "toml" => toml::from_str(&content).expect("Unable to parse TOML"),
+        "json" => serde_json::from_str(&content).expect("Unable to parse JSON"),
+        _ => panic!("Unsupported source file type"),
+    }
 }
 
 /// Write the source file with the given content.
