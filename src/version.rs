@@ -1,3 +1,7 @@
+use colored::Colorize;
+use log::{error, info};
+use std::process;
+
 pub struct Version {
     pub major: u32,
     pub minor: u32,
@@ -9,7 +13,7 @@ impl Version {
     ///
     /// * `bump_type`: The type of bump to perform ("major", "minor", or "patch").
     pub fn bump(&self, bump_type: &str) -> Version {
-        match bump_type {
+        let version = match bump_type {
             "major" => Version {
                 major: self.major + 1,
                 minor: 0,
@@ -25,8 +29,18 @@ impl Version {
                 minor: self.minor,
                 patch: self.patch + 1,
             },
-            _ => panic!("Invalid bump type"),
-        }
+            _ => {
+                error!("Invalid bump type: {}", bump_type);
+                process::exit(1);
+            }
+        };
+
+        info!(
+            "Bumped version from {} to {}",
+            self.to_string().yellow(),
+            version.to_string().yellow()
+        );
+        version
     }
 }
 

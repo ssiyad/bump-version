@@ -33,7 +33,7 @@
 
 # 0.5.2
 - [ ] Better error handling
-- [ ] Better debug and info messages
+- [x] Better debug and info messages (Logging)
 
 # 0.6
 - [ ] `--dry-run` option

@@ -1,10 +1,19 @@
 use clap::{Arg, command};
+use log::LevelFilter;
 
 mod actions;
 mod sources;
 mod version;
 
 fn main() {
+    // Logger.
+    env_logger::builder()
+        .filter_level(LevelFilter::Trace)
+        .format_timestamp(None)
+        .format_target(false)
+        .init();
+
+    // Parse command line arguments.
     let matches = command!()
         .arg(
             Arg::new("bump-type")
@@ -23,5 +32,4 @@ fn main() {
     sources::cargo_toml::update_version(&bumped);
     actions::commit(&current, &bumped);
     actions::tag(&bumped);
-    println!("Bumped version: {}", bumped);
 }

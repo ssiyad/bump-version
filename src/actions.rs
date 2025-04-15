@@ -1,5 +1,7 @@
 use crate::version::Version;
+use colored::Colorize;
 use git2::{IndexAddOption, Repository};
+use log::info;
 
 /// Commit the version change to the git repository.
 pub fn commit(old_version: &Version, new_version: &Version) {
@@ -16,6 +18,7 @@ pub fn commit(old_version: &Version, new_version: &Version) {
 
     // Confirm stage.
     index.write().expect("Unable to write index");
+    info!("Staged changes");
 
     // Construct the commit message.
     let message = format!(
@@ -39,15 +42,19 @@ pub fn commit(old_version: &Version, new_version: &Version) {
     let tree = repo.find_tree(oid).expect("Unable to find tree");
 
     // Commit with message.
-    repo.commit(
-        Some("HEAD"),
-        &signature,
-        &signature,
-        &message,
-        &tree,
-        &[&parent],
-    )
-    .expect("Unable to commit changes");
+    let commit = repo
+        .commit(
+            Some("HEAD"),
+            &signature,
+            &signature,
+            &message,
+            &tree,
+            &[&parent],
+        )
+        .expect("Unable to commit changes");
+
+    // Print success message.
+    info!("Created commit: {}", commit.to_string().yellow());
 }
 
 /// Create a tag for the new version in the git repository.
@@ -69,4 +76,7 @@ pub fn tag(new_version: &Version) {
     // Create the tag.
     repo.tag(&tag, &target, &signature, "", false)
         .expect("Unable to create tag");
+
+    // Print success message.
+    info!("Created tag: {}", tag.yellow());
 }
