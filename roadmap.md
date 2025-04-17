@@ -46,7 +46,7 @@
 
 # 1.0
 - [ ] Readme
-- [ ] License
+- [x] License
 
 # 1.1
 - [ ] Configuration file
