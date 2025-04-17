@@ -47,7 +47,6 @@
 # 1.0
 - [x] Readme
 - [x] License
-- [ ] Build releases
 
 # 1.1
 - [ ] Configuration file

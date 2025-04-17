@@ -1,24 +1,35 @@
 # `bump-version`
 Read, bump, write, commit and tag versions, automatically, in one line!
 
+## Installation
+Install
+[cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) and
+then:
+```bash
+> git clone https://github.com/ssiyad/bump-version
+> cd bump-version
+> cargo build --release
+> cp target/release/bump-version /usr/local/bin
+```
+
 ## Example
 ```
-» bump-version --cargo-toml --dry-run
+> bump-version --cargo-toml --dry-run
 [DEBUG] Parsed source: Cargo.toml
 [INFO ] Bumped version from 0.26.1 to 0.26.2
 
-» bump-version --cargo-toml --dry-run minor
+> bump-version --cargo-toml --dry-run minor
 [DEBUG] Parsed source: Cargo.toml
 [INFO ] Bumped version from 0.26.1 to 0.27.0
 
-» bump-version --cargo-toml --dry-run major
+> bump-version --cargo-toml --dry-run major
 [DEBUG] Parsed source: Cargo.toml
 [INFO ] Bumped version from 0.26.1 to 1.0.0
 ```
 
 ## Help
 ```bash
-bump-version --help
+> bump-version --help
 ```
 
 ```
