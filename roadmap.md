@@ -55,3 +55,8 @@
 # 1.2
 - [ ] Tag format
 - [ ] Commit message format
+
+# 1.3
+- [ ] Publish to crate.io (maybe)
+- [ ] Build for different platforms
+- [ ] GitHub action for build and release
