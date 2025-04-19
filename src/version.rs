@@ -2,6 +2,7 @@ use colored::Colorize;
 use log::{error, info};
 use std::process;
 
+#[derive(Debug)]
 pub struct Version {
     pub major: u32,
     pub minor: u32,
