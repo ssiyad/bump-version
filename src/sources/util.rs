@@ -1,4 +1,5 @@
 use crate::error::BumpVersionError;
+use crate::version::Version;
 use colored::Colorize;
 use git2::Repository;
 use indexmap::IndexMap;
@@ -46,6 +47,47 @@ pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpV
 
     debug!("Parsed source: {}", source.yellow());
     parsed
+}
+
+/// Get the version from the source file.
+///
+/// * `source`: The source name.
+/// * `keys`: The key to the version in the source file.
+pub fn get_version<T>(
+    source: IndexMap<String, toml::Value>,
+    keys: T,
+) -> Result<Version, BumpVersionError>
+where
+    T: IntoIterator<Item = String>,
+{
+    // Convert to an iterator.
+    let mut iter = keys.into_iter();
+
+    // Get the initial key.
+    let initial_key = iter
+        .next()
+        .ok_or(BumpVersionError::Other("No keys provided"))?;
+
+    // Get initial section.
+    let mut section = source.get(&initial_key);
+
+    // Iterate through the keys and get the section.
+    for key in iter {
+        section = section.and_then(|s| s.get(key.as_str()));
+    }
+
+    // Get the version string.
+    let version_str = section
+        .ok_or(BumpVersionError::Other("Section not found"))?
+        .as_str()
+        .ok_or(BumpVersionError::Other("Version is not a string"))?;
+
+    // Parse the version string.
+    let version = Version::from(version_str);
+    debug!("Got version: {}", version.to_string().yellow());
+
+    // Return the parsed version.
+    Ok(version)
 }
 
 /// Write the source file with the given content.

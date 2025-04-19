@@ -1,25 +1,11 @@
-use super::{parse_source, write_source};
+use super::{get_version as get_v, parse_source, write_source};
 use crate::{error::BumpVersionError, version::Version};
 
 const CARGO_TOML: &str = "Cargo.toml";
 
 pub fn get_version() -> Result<Version, BumpVersionError> {
-    // Get cargo.toml.
     let source = parse_source(CARGO_TOML)?;
-
-    // Get the version string from the cargo.toml.
-    let version_str = source
-        .get("package")
-        .ok_or(BumpVersionError::Other("Package section not found"))?
-        .get("version")
-        .ok_or(BumpVersionError::Other(
-            "Version not found in package section",
-        ))?
-        .as_str()
-        .ok_or(BumpVersionError::Other("Version is not a string"))?;
-
-    // Convert the version string to a Version struct.
-    Ok(Version::from(version_str))
+    get_v(source, vec!["package".to_string(), "version".to_string()])
 }
 
 pub fn update_version(version: &Version) -> Result<(), BumpVersionError> {

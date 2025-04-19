@@ -1,4 +1,4 @@
-use super::{parse_source, write_source};
+use super::{get_version as get_v, parse_source, write_source};
 use crate::{error::BumpVersionError, version::Version};
 
 // Define the name of the package.json file.
@@ -6,18 +6,8 @@ const PACKAGE_JSON: &str = "package.json";
 
 /// Get the version from the package.json file.
 pub fn get_version() -> Result<Version, BumpVersionError> {
-    // Get package.json.
     let source = parse_source(PACKAGE_JSON)?;
-
-    // Get the version string from the package.json.
-    let version_str = source
-        .get("version")
-        .ok_or(BumpVersionError::Other("Version not found in package.json"))?
-        .as_str()
-        .ok_or(BumpVersionError::Other("Version is not a string"))?;
-
-    // Convert the version string to a Version struct.
-    Ok(Version::from(version_str))
+    get_v(source, vec!["version".to_string()])
 }
 
 /// Update the version in the package.json file.
