@@ -3,6 +3,7 @@ use log::{LevelFilter, error};
 
 mod actions;
 mod error;
+mod source;
 mod sources;
 mod version;
 
@@ -86,7 +87,7 @@ fn run(
     no_tag: bool,
 ) -> Result<(), error::BumpVersionError> {
     if !package_json && !cargo_toml {
-        return Err(error::BumpVersionError::NoSourceSpecified);
+        return Err(error::BumpVersionError::SourceNotSpecified);
     }
 
     if package_json {
