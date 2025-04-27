@@ -50,7 +50,6 @@
 
 # 1.1
 - [ ] Configuration file
-- [ ] Generic file handling
 
 # 1.2
 - [ ] Tag format
@@ -60,3 +59,9 @@
 - [ ] Publish to crate.io (maybe)
 - [ ] Build for different platforms
 - [ ] GitHub action for build and release
+
+# 1.4
+- [ ] Generic file handling
+- [ ] Redo architecture
+- [ ] Refactor code
+- [ ] Code cleanup
