@@ -1,7 +1,7 @@
-use clap::{Arg, ArgAction, command};
 use log::{LevelFilter, error};
 
 mod actions;
+mod config;
 mod error;
 mod source;
 mod sources;
@@ -15,64 +15,17 @@ fn main() {
         .format_target(false)
         .init();
 
-    // Parse command line arguments.
-    let matches = command!()
-        .arg(
-            Arg::new("bump-type")
-                .value_parser(["major", "minor", "patch"])
-                .default_value("patch")
-                .help("Bump type"),
-        )
-        .arg(
-            Arg::new("package-json")
-                .long("package-json")
-                .action(ArgAction::SetTrue)
-                .help("Update package.json"),
-        )
-        .arg(
-            Arg::new("cargo-toml")
-                .long("cargo-toml")
-                .action(ArgAction::SetTrue)
-                .help("Update Cargo.toml"),
-        )
-        .arg(
-            Arg::new("dry-run")
-                .long("dry-run")
-                .action(ArgAction::SetTrue)
-                .help("Do not write to sources"),
-        )
-        .arg(
-            Arg::new("no-commit")
-                .long("no-commit")
-                .action(ArgAction::SetTrue)
-                .help("Do not commit the version change"),
-        )
-        .arg(
-            Arg::new("no-tag")
-                .long("no-tag")
-                .action(ArgAction::SetTrue)
-                .help("Do not add a tag"),
-        )
-        .get_matches();
-
-    let package_json = matches.get_flag("package-json");
-    let cargo_toml = matches.get_flag("cargo-toml");
-    let dry_run = matches.get_flag("dry-run");
-    let no_commit = matches.get_flag("no-commit");
-    let no_tag = matches.get_flag("no-tag");
-
-    let bump_type = matches
-        .get_one::<String>("bump-type")
-        .expect("Invalid bump type");
+    // Get configuration options.
+    let options = config::get();
 
     // Run and handle errors, if any.
     if let Err(err) = run(
-        bump_type,
-        package_json,
-        cargo_toml,
-        dry_run,
-        no_commit,
-        no_tag,
+        &options.bump_type,
+        options.package_json,
+        options.cargo_toml,
+        options.dry_run,
+        options.no_commit,
+        options.no_tag,
     ) {
         error!("{}", err);
     };

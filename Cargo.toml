@@ -4,6 +4,7 @@ version = "0.7.0"
 edition = "2024"
 
 [dependencies]
+clap_config = "0.1.1"
 colored = "3.0"
 env_logger = "0.11"
 git2 = "0.20"
@@ -12,7 +13,7 @@ thiserror = "2.0"
 
 [dependencies.clap]
 version = "4.5"
-features = ["cargo"]
+features = ["derive"]
 
 [dependencies.serde]
 version = "1.0"
