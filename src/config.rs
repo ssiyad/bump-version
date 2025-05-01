@@ -31,6 +31,8 @@ pub struct Options {
 
     #[clap(long, default_value = "false")]
     pub no_tag: bool,
+
+    pub template_tag: Option<String>,
 }
 
 /// Get the configuration from the command line arguments or the config file.

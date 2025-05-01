@@ -52,7 +52,7 @@
 - [x] Configuration file
 
 # 1.2
-- [ ] Tag format
+- [x] Tag format
 - [ ] Commit message format
 - [ ] Code cleanup
 - [x] Config file from project root

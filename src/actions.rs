@@ -58,7 +58,7 @@ pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVe
 /// Create a tag for the new version in the git repository.
 ///
 /// * `new_version`: The new version to tag.
-pub fn tag(new_version: &Version) -> Result<(), BumpVersionError> {
+pub fn tag(version: &Version, template: Option<&str>) -> Result<(), BumpVersionError> {
     // Get the repository.
     let repo = Repository::discover(".")?;
 
@@ -68,8 +68,17 @@ pub fn tag(new_version: &Version) -> Result<(), BumpVersionError> {
     // Get signature.
     let signature = repo.signature()?;
 
-    // Get tag.
-    let tag = format!("v{}", new_version);
+    // Render template if provided.
+    let tag = match template {
+        Some(template) => {
+            let mut templ = tera::Tera::default();
+            let mut context = tera::Context::new();
+            templ.add_raw_template("tag", template).unwrap();
+            context.insert("version", &version.to_string());
+            templ.render("tag", &context).unwrap()
+        }
+        None => format!("v{}", version),
+    };
 
     // Create the tag.
     repo.tag(&tag, &target, &signature, "", false)?;
