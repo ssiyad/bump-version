@@ -44,12 +44,10 @@ pub fn get() -> Options {
 
 /// Get the configuration from the config file if it exists.
 fn config_source() -> Option<OptionsConfig> {
-    config_path().map(|path| toml::from_str(&fs::read_to_string(path).unwrap()).unwrap())
-}
-
-/// Get the path to the configuration file.
-fn config_path() -> Option<PathBuf> {
-    config_root().map(|root| root.join(CONFIG_FILE))
+    config_root().map(|path| {
+        let path = path.join(CONFIG_FILE);
+        toml::from_str(&fs::read_to_string(path).unwrap()).unwrap()
+    })
 }
 
 /// Get the path to the home configuration directory.
