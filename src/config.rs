@@ -1,9 +1,13 @@
 use clap::CommandFactory;
 use clap::Parser;
 use clap_config::ClapConfig;
+use std::{
+    env, fs,
+    path::{Path, PathBuf},
+};
 
 #[derive(Parser, Debug, ClapConfig)]
-pub struct Config {
+pub struct Options {
     #[clap(long, default_value = "patch")]
     pub bump_type: String,
 
@@ -23,9 +27,37 @@ pub struct Config {
     pub no_tag: bool,
 }
 
-pub fn get() -> Config {
-    let config_str = "".to_string();
-    let matches = <Config as CommandFactory>::command().get_matches();
-    let config_: ConfigConfig = toml::from_str(&config_str).unwrap();
-    Config::from_merged(matches, Some(config_))
+pub fn get() -> Options {
+    let matches = <Options as CommandFactory>::command().get_matches();
+    Options::from_merged(matches, config_source())
+}
+
+fn config_source() -> Option<OptionsConfig> {
+    config_path().map(|path| toml::from_str(&fs::read_to_string(path).unwrap()).unwrap())
+}
+
+fn config_path() -> Option<PathBuf> {
+    let xdg_config = env::var("XDG_CONFIG_HOME").ok();
+    let home_config = env::var("HOME").ok();
+
+    if let Some(xdg) = xdg_config {
+        let path = Path::new(&xdg).join("bumpversion").join("config.toml");
+
+        if path.exists() {
+            return Some(path);
+        }
+    }
+
+    if let Some(home) = home_config {
+        let path = Path::new(&home)
+            .join(".config")
+            .join("bumpversion")
+            .join("config.toml");
+
+        if path.exists() {
+            return Some(path);
+        }
+    }
+
+    None
 }

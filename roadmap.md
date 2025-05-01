@@ -49,7 +49,7 @@
 - [x] License
 
 # 1.1
-- [ ] Configuration file
+- [x] Configuration file
 
 # 1.2
 - [ ] Tag format
