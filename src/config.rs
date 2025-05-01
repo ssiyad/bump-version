@@ -6,10 +6,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const CONFIG_FILE: &str = "config.toml";
 const CONFIG_DIR: &str = ".config";
-const CONFIG_DIR_NAME: &str = "bump-version";
+const CONFIG_FILE: &str = "bump-version.toml";
 const CONFIG_HOME: &str = "XDG_CONFIG_HOME";
+const USER_HOME: &str = "HOME";
 
 #[derive(Parser, Debug, ClapConfig)]
 pub struct Options {
@@ -45,15 +45,21 @@ fn config_source() -> Option<OptionsConfig> {
 
 /// Get the path to the configuration file.
 fn config_path() -> Option<PathBuf> {
-    config_root().map(|root| root.join(CONFIG_DIR_NAME).join(CONFIG_FILE))
+    config_root().map(|root| root.join(CONFIG_FILE))
 }
 
 /// Get the path to the home configuration directory.
 fn config_root() -> Option<PathBuf> {
+    // If the config file exists in the current directory, use that.
+    if fs::exists(CONFIG_FILE).is_ok_and(|exists| exists) {
+        return env::current_dir().ok();
+    }
+
+    // If the config file exists in the home directory, use that.
     match env::var(CONFIG_HOME) {
         Ok(xdg_home) => Some(Path::new(&xdg_home).to_path_buf()),
         Err(_) => {
-            let home = env::var("HOME").unwrap();
+            let home = env::var(USER_HOME).unwrap();
             Some(Path::new(&home).join(CONFIG_DIR))
         }
     }
