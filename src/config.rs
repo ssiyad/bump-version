@@ -8,7 +8,7 @@ use std::{
 
 const CONFIG_FILE: &str = "config.toml";
 const CONFIG_DIR: &str = ".config";
-const CONFIG_DIR_NAME: &str = "bumpversion";
+const CONFIG_DIR_NAME: &str = "bump-version";
 const CONFIG_HOME: &str = "XDG_CONFIG_HOME";
 
 #[derive(Parser, Debug, ClapConfig)]
