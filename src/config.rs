@@ -45,19 +45,11 @@ fn config_source() -> Option<OptionsConfig> {
 
 /// Get the path to the configuration file.
 fn config_path() -> Option<PathBuf> {
-    if let Some(home) = config_home() {
-        let path = home.join(CONFIG_DIR_NAME).join(CONFIG_FILE);
-
-        if path.exists() {
-            return Some(path);
-        }
-    }
-
-    None
+    config_root().map(|root| root.join(CONFIG_DIR_NAME).join(CONFIG_FILE))
 }
 
 /// Get the path to the home configuration directory.
-fn config_home() -> Option<PathBuf> {
+fn config_root() -> Option<PathBuf> {
     match env::var(CONFIG_HOME) {
         Ok(xdg_home) => Some(Path::new(&xdg_home).to_path_buf()),
         Err(_) => {
