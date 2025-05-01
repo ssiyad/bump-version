@@ -6,6 +6,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
+const CONFIG_FILE: &str = "config.toml";
+const CONFIG_DIR: &str = ".config";
+const CONFIG_DIR_NAME: &str = "bumpversion";
+const CONFIG_HOME: &str = "XDG_CONFIG_HOME";
+
 #[derive(Parser, Debug, ClapConfig)]
 pub struct Options {
     #[clap(long, default_value = "patch")]
@@ -27,32 +32,24 @@ pub struct Options {
     pub no_tag: bool,
 }
 
+/// Get the configuration from the command line arguments or the config file.
 pub fn get() -> Options {
     let matches = <Options as CommandFactory>::command().get_matches();
     Options::from_merged(matches, config_source())
 }
 
+/// Get the configuration from the config file if it exists.
 fn config_source() -> Option<OptionsConfig> {
     config_path().map(|path| toml::from_str(&fs::read_to_string(path).unwrap()).unwrap())
 }
 
+/// Get the path to the configuration file.
 fn config_path() -> Option<PathBuf> {
-    let xdg_config = env::var("XDG_CONFIG_HOME").ok();
-    let home_config = env::var("HOME").ok();
-
-    if let Some(xdg) = xdg_config {
-        let path = Path::new(&xdg).join("bumpversion").join("config.toml");
-
-        if path.exists() {
-            return Some(path);
-        }
-    }
-
-    if let Some(home) = home_config {
-        let path = Path::new(&home)
-            .join(".config")
-            .join("bumpversion")
-            .join("config.toml");
+    if let Ok(xdg_home) = env::var(CONFIG_HOME) {
+        let path = Path::new(&xdg_home)
+            .join(CONFIG_DIR)
+            .join(CONFIG_DIR_NAME)
+            .join(CONFIG_FILE);
 
         if path.exists() {
             return Some(path);
