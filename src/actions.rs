@@ -58,6 +58,7 @@ pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVe
 /// Create a tag for the new version in the git repository.
 ///
 /// * `new_version`: The new version to tag.
+/// * `template`: Optional template for the tag name.
 pub fn tag(version: &Version, template: Option<&str>) -> Result<(), BumpVersionError> {
     // Get the repository.
     let repo = Repository::discover(".")?;
