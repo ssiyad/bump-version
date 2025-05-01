@@ -3,7 +3,6 @@ use log::{LevelFilter, error};
 mod actions;
 mod config;
 mod error;
-mod source;
 mod sources;
 mod version;
 

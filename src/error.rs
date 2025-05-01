@@ -5,9 +5,6 @@ pub enum BumpVersionError {
     #[error("No source specified")]
     SourceNotSpecified,
 
-    #[error("No source file found")]
-    SourceNotFound,
-
     #[error("Git: {0}")]
     Git(#[from] git2::Error),
 
