@@ -23,6 +23,7 @@ fn main() {
         &options.bump_type,
         options.package_json,
         options.cargo_toml,
+        options.template_commit,
         options.template_tag,
         options.dry_run,
         options.no_commit,
@@ -36,6 +37,7 @@ fn run(
     bump_type: &str,
     package_json: bool,
     cargo_toml: bool,
+    template_commit: Option<String>,
     template_tag: Option<String>,
     dry_run: bool,
     no_commit: bool,
@@ -54,7 +56,7 @@ fn run(
         }
 
         if !no_commit && !dry_run {
-            actions::commit(&current, &bumped)?;
+            actions::commit(&current, &bumped, template_commit.as_deref())?;
         }
 
         if !no_tag && !dry_run {
@@ -71,7 +73,7 @@ fn run(
         }
 
         if !no_commit && !dry_run {
-            actions::commit(&current, &bumped)?;
+            actions::commit(&current, &bumped, template_commit.as_deref())?;
         }
 
         if !no_tag && !dry_run {

@@ -32,6 +32,7 @@ pub struct Options {
     #[clap(long, default_value = "false")]
     pub no_tag: bool,
 
+    pub template_commit: Option<String>,
     pub template_tag: Option<String>,
 }
 

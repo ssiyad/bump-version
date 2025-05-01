@@ -4,7 +4,11 @@ use git2::{IndexAddOption, Repository};
 use log::info;
 
 /// Commit the version change to the git repository.
-pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVersionError> {
+pub fn commit(
+    old_version: &Version,
+    new_version: &Version,
+    template: Option<&str>,
+) -> Result<(), BumpVersionError> {
     // Get the repository.
     let repo = Repository::discover(".")?;
 
@@ -18,11 +22,21 @@ pub fn commit(old_version: &Version, new_version: &Version) -> Result<(), BumpVe
     index.write()?;
     info!("Staged changes");
 
-    // Construct the commit message.
-    let message = format!(
-        "chore: bump version from {} to {}",
-        old_version, new_version,
-    );
+    // Render template if provided.
+    let message = match template {
+        Some(template) => {
+            let mut templ = tera::Tera::default();
+            let mut context = tera::Context::new();
+            templ.add_raw_template("commit", template).unwrap();
+            context.insert("new_version", &new_version.to_string());
+            context.insert("old_version", &old_version.to_string());
+            templ.render("commit", &context).unwrap()
+        }
+        None => format!(
+            "chore: bump version from {} to {}",
+            old_version, new_version,
+        ),
+    };
 
     // Get the head commit.
     let head = repo.head()?;
