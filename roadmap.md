@@ -56,7 +56,7 @@
 - [ ] Commit message format
 - [ ] Code cleanup
 - [x] Config file from project root
-- [ ] Config file from git root
+- [x] Config file from git root
 
 # 1.3
 - [ ] Publish to crate.io (maybe)

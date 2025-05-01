@@ -1,6 +1,7 @@
 use clap::CommandFactory;
 use clap::Parser;
 use clap_config::ClapConfig;
+use git2::Repository;
 use std::{
     env, fs,
     path::{Path, PathBuf},
@@ -50,9 +51,17 @@ fn config_path() -> Option<PathBuf> {
 
 /// Get the path to the home configuration directory.
 fn config_root() -> Option<PathBuf> {
+    // Get the current directory.
+    let current_dir = env::current_dir().unwrap();
+
     // If the config file exists in the current directory, use that.
     if fs::exists(CONFIG_FILE).is_ok_and(|exists| exists) {
-        return env::current_dir().ok();
+        return Some(current_dir);
+    }
+
+    // If the config file exists in the current git repository, use that.
+    if let Ok(git_root) = Repository::discover(current_dir) {
+        return Some(git_root.path().to_path_buf());
     }
 
     // If the config file exists in the home directory, use that.
