@@ -54,6 +54,9 @@
 # 1.2
 - [ ] Tag format
 - [ ] Commit message format
+- [ ] Code cleanup
+- [ ] Config file from project root
+- [ ] Config file from git root
 
 # 1.3
 - [ ] Publish to crate.io (maybe)
