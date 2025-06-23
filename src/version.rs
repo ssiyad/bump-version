@@ -10,6 +10,26 @@ pub struct Version {
 }
 
 impl Version {
+    /// Parse a version string into a Version struct
+    pub fn parse_version(version_str: &str) -> Result<Version, String> {
+        let parts: Vec<&str> = version_str.split('.').collect();
+
+        // Check if the version string has exactly 3 parts
+        // Check if the version string has exactly 3 parts.
+        if parts.len() != 3 {
+            return Err(format!("Invalid version string '{}': must have format major.minor.patch", version_str));
+        }
+
+        let major = parts[0].parse::<u32>()
+            .map_err(|_| format!("Invalid major version '{}': must be a number", parts[0]))?;
+        let minor = parts[1].parse::<u32>()
+            .map_err(|_| format!("Invalid minor version '{}': must be a number", parts[1]))?;
+        let patch = parts[2].parse::<u32>()
+            .map_err(|_| format!("Invalid patch version '{}': must be a number", parts[2]))?;
+
+        Ok(Version { major, minor, patch })
+    }
+
     /// Bumps the version number based on the specified bump type.
     ///
     /// * `bump_type`: The type of bump to perform ("major", "minor", or "patch").
@@ -47,17 +67,13 @@ impl Version {
 
 impl From<&str> for Version {
     fn from(version_str: &str) -> Self {
-        let parts: Vec<&str> = version_str.split('.').collect();
-
-        // Check if the version string has exactly 3 parts.
-        if parts.len() != 3 {
-            panic!("Invalid version string");
-        }
-
-        Version {
-            major: parts[0].parse().unwrap(),
-            minor: parts[1].parse().unwrap(),
-            patch: parts[2].parse().unwrap(),
+        // Use try_from but panic on error to maintain backward compatibility
+        // Use try_from but panic on error to maintain backward compatibility.
+        match Version::parse_version(version_str) {
+            Ok(version) => version,
+            Err(e) => {
+                panic!("{}", e);
+            }
         }
     }
 }
@@ -129,5 +145,27 @@ mod tests {
         assert_eq!(bumped.major, 1);
         assert_eq!(bumped.minor, 2);
         assert_eq!(bumped.patch, 4);
+    }
+    
+    #[test]
+    fn test_parse_version_valid() {
+        let result = Version::parse_version("1.2.3");
+        assert!(result.is_ok());
+        let version = result.unwrap();
+        assert_eq!(version.major, 1);
+        assert_eq!(version.minor, 2);
+        assert_eq!(version.patch, 3);
+    }
+    
+    #[test]
+    fn test_parse_version_invalid_format() {
+        let result = Version::parse_version("1.2");
+        assert!(result.is_err());
+    }
+    
+    #[test]
+    fn test_parse_version_invalid_numbers() {
+        let result = Version::parse_version("1.a.3");
+        assert!(result.is_err());
     }
 }

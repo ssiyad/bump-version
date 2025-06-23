@@ -14,17 +14,26 @@ then:
 
 ## Example
 ```
-> bump-version --cargo-toml --dry-run
-[DEBUG] Parsed source: Cargo.toml
-[INFO ] Bumped version from 0.26.1 to 0.26.2
+> bump-version cargo.toml --dry-run
+File: Some("cargo.toml")
+Bump type: patch
+Dry run: true
+Commit: false
+Tag: false
 
-> bump-version --cargo-toml --dry-run minor
-[DEBUG] Parsed source: Cargo.toml
-[INFO ] Bumped version from 0.26.1 to 0.27.0
+> bump-version cargo.toml --bump-type minor
+File: Some("cargo.toml")
+Bump type: minor
+Dry run: false
+Commit: false
+Tag: false
 
-> bump-version --cargo-toml --dry-run major
-[DEBUG] Parsed source: Cargo.toml
-[INFO ] Bumped version from 0.26.1 to 1.0.0
+> bump-version package.json --bump-type major --commit --tag
+File: Some("package.json")
+Bump type: major
+Dry run: false
+Commit: true
+Tag: true
 ```
 
 ## Help
@@ -33,19 +42,19 @@ then:
 ```
 
 ```
-Usage: bump-version [OPTIONS] [bump-type]
+Bump the version in package.json or Cargo.toml files
+
+Usage: bump-version [OPTIONS] [FILE]
 
 Arguments:
-  [bump-type]  Bump type [default: patch] [possible values: major, minor, patch]
+  [FILE]  File path to the package.json or cargo.toml file
 
 Options:
-      --package-json  Update package.json
-      --cargo-toml    Update Cargo.toml
-      --dry-run       Do not write to sources
-      --no-commit     Do not commit the version change
-      --no-tag        Do not add a tag
-  -h, --help          Print help
-  -V, --version       Print version
+      --bump-type <BUMP_TYPE>  [default: patch]
+      --dry-run                
+      --commit                 Create a commit after bumping version
+      --tag                    Create a tag after bumping version
+  -h, --help                   Print help
 ```
 
 ## Self Promotion

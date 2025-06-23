@@ -1,16 +1,14 @@
-use super::{get_version as get_v, parse_source, write_source};
+use super::{get_version_from_source, parse_source, write_source};
 use crate::{error::BumpVersionError, version::Version};
 
-const CARGO_TOML: &str = "Cargo.toml";
-
-pub fn get_version() -> Result<Version, BumpVersionError> {
-    let source = parse_source(CARGO_TOML)?;
-    get_v(source, vec!["package".to_string(), "version".to_string()])
+pub fn get_version(file_path: &str) -> Result<Version, BumpVersionError> {
+    let source = parse_source(file_path)?;
+    get_version_from_source(source, vec!["package".to_string(), "version".to_string()])
 }
 
-pub fn update_version(version: &Version) -> Result<(), BumpVersionError> {
+pub fn update_version(file_path: &str, version: &Version) -> Result<(), BumpVersionError> {
     // Get cargo.toml.
-    let mut source = parse_source(CARGO_TOML)?;
+    let mut source = parse_source(file_path)?;
 
     // Upsert the version string in the cargo.toml.
     source
@@ -24,7 +22,7 @@ pub fn update_version(version: &Version) -> Result<(), BumpVersionError> {
     let content = toml::to_string_pretty(&source)?;
 
     // Write the updated cargo.toml back to the file.
-    write_source(CARGO_TOML, &content)?;
+    write_source(file_path, &content)?;
 
     Ok(())
 }

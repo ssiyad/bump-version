@@ -5,6 +5,7 @@ use git2::Repository;
 use indexmap::IndexMap;
 use log::debug;
 use std::fs;
+use std::path::Path;
 
 /// Get the path to the `source` file. Looks first in the current directory, then in the git root.
 ///
@@ -16,7 +17,10 @@ fn get_path(source: &str) -> Result<String, BumpVersionError> {
     }
 
     // Find git repository.
-    let repo = Repository::discover(".")?;
+    let repo = match Repository::discover(".") {
+        Ok(repo) => repo,
+        Err(_) => return Err(BumpVersionError::FileNotFound(source.to_string())),
+    };
 
     // Construct and return the path to the package.json file in git repo root.
     let path = repo
@@ -32,17 +36,30 @@ fn get_path(source: &str) -> Result<String, BumpVersionError> {
 }
 
 /// Parse the source file and return its contents as an IndexMap.
-// Note! Get rid of `toml::Value` as type.
 pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpVersionError> {
     // Read the source.
     let path = get_path(source)?;
-    let content = std::fs::read_to_string(path)?;
+    let content = match std::fs::read_to_string(&path) {
+        Ok(content) => content,
+        Err(e) => return Err(BumpVersionError::from(e)),
+    };
 
     // Parse and return source.
-    let parsed = match source.split(".").last() {
-        Some("toml") => toml::from_str(&content).map_err(BumpVersionError::from),
-        Some("json") => serde_json::from_str(&content).map_err(BumpVersionError::from),
-        _ => Err(BumpVersionError::Other("Unsupported file type")),
+    let file_extension = Path::new(source)
+        .extension()
+        .and_then(|ext| ext.to_str())
+        .unwrap_or("");
+
+    let parsed = match file_extension.to_lowercase().as_str() {
+        "toml" => match toml::from_str(&content) {
+            Ok(value) => Ok(value),
+            Err(e) => Err(BumpVersionError::InvalidFileFormat(format!("{}: {}", source, e))),
+        },
+        "json" => match serde_json::from_str(&content) {
+            Ok(value) => Ok(value),
+            Err(e) => Err(BumpVersionError::InvalidFileFormat(format!("{}: {}", source, e))),
+        },
+        _ => Err(BumpVersionError::UnsupportedFileType(source.to_string())),
     };
 
     debug!("Parsed source: {}", source.yellow());
@@ -53,7 +70,7 @@ pub fn parse_source(source: &str) -> Result<IndexMap<String, toml::Value>, BumpV
 ///
 /// * `source`: The source name.
 /// * `keys`: The key to the version in the source file.
-pub fn get_version<T>(
+pub fn get_version_from_source<T>(
     source: IndexMap<String, toml::Value>,
     keys: T,
 ) -> Result<Version, BumpVersionError>
@@ -78,12 +95,15 @@ where
 
     // Get the version string.
     let version_str = section
-        .ok_or(BumpVersionError::Other("Section not found"))?
+        .ok_or(BumpVersionError::Other("Version field not found in file"))?
         .as_str()
-        .ok_or(BumpVersionError::Other("Version is not a string"))?;
+        .ok_or(BumpVersionError::Other("Version value is not a string"))?;
 
     // Parse the version string.
-    let version = Version::from(version_str);
+    let version = match Version::parse_version(version_str) {
+        Ok(v) => v,
+        Err(e) => return Err(BumpVersionError::InvalidVersion(e.to_string())),
+    };
     debug!("Got version: {}", version.to_string().yellow());
 
     // Return the parsed version.

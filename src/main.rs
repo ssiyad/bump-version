@@ -19,66 +19,58 @@ fn main() {
 
     // Run and handle errors, if any.
     if let Err(err) = run(
+        options.file.as_deref(),
         &options.bump_type,
-        options.package_json,
-        options.cargo_toml,
-        options.template_commit,
-        options.template_tag,
         options.dry_run,
-        options.no_commit,
-        options.no_tag,
+        options.commit,
+        options.tag,
     ) {
         error!("{}", err);
     };
 }
 
 fn run(
+    file_path: Option<&str>,
     bump_type: &str,
-    package_json: bool,
-    cargo_toml: bool,
-    template_commit: Option<String>,
-    template_tag: Option<String>,
     dry_run: bool,
-    no_commit: bool,
-    no_tag: bool,
+    commit: bool,
+    tag: bool,
 ) -> Result<(), error::BumpVersionError> {
-    if !package_json && !cargo_toml {
+    if file_path.is_none() {
         return Err(error::BumpVersionError::SourceNotSpecified);
     }
 
-    if package_json {
-        let current = sources::package_json::get_version()?;
-        let bumped = current.bump(bump_type);
+    let file_path = file_path.unwrap();
 
-        if !dry_run {
-            sources::package_json::update_version(&bumped)?;
-        }
+    // Auto-detect file type
+    // Auto-detect file type.
+    let file_type = if file_path.to_lowercase().ends_with("package.json") {
+        "package.json"
+    } else if file_path.to_lowercase().ends_with("cargo.toml") {
+        "cargo.toml"
+    } else {
+        return Err(error::BumpVersionError::UnsupportedFileType(
+            file_path.to_string(),
+        ));
+    };
 
-        if !no_commit && !dry_run {
-            actions::commit(&current, &bumped, template_commit.as_deref())?;
-        }
+    // Get the current version and bump it
+    // Get the current version and bump it.
+    let current = sources::get_version(file_path, file_type)?;
+    let bumped = current.bump(bump_type);
 
-        if !no_tag && !dry_run {
-            actions::tag(&bumped, template_tag.as_deref())?;
-        }
+    if !dry_run {
+        sources::update_version(file_path, file_type, &bumped)?;
     }
 
-    if cargo_toml {
-        let current = sources::cargo_toml::get_version()?;
-        let bumped = current.bump(bump_type);
+    if commit && !dry_run {
+        actions::commit(&current, &bumped, None)?;
+    }
 
-        if !dry_run {
-            sources::cargo_toml::update_version(&bumped)?;
-        }
-
-        if !no_commit && !dry_run {
-            actions::commit(&current, &bumped, template_commit.as_deref())?;
-        }
-
-        if !no_tag && !dry_run {
-            actions::tag(&bumped, template_tag.as_deref())?;
-        }
+    if tag && !dry_run {
+        actions::tag(&bumped, None)?;
     }
 
     Ok(())
 }
+
