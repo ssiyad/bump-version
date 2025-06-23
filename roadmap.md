@@ -54,7 +54,7 @@
 # 1.2
 - [x] Tag format
 - [x] Commit message format
-- [ ] Code cleanup
+- [x] Code cleanup
 - [x] Config file from project root
 - [x] Config file from git root
 
