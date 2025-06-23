@@ -1,14 +1,23 @@
 [package]
 name = "bump-version"
-version = "1.2.0"
+version = "1.2.1"
 edition = "2024"
 description = "Read, bump, write, commit and tag versions, automatically, in one line!"
 authors = ["Sabu Siyad <mail@ssiyad.com>"]
 license = "MIT"
 repository = "https://github.com/ssiyad/bump-version"
 readme = "README.md"
-keywords = ["versioning", "semver", "bump", "release", "package"]
-categories = ["command-line-utilities", "development-tools"]
+keywords = [
+    "versioning",
+    "semver",
+    "bump",
+    "release",
+    "package",
+]
+categories = [
+    "command-line-utilities",
+    "development-tools",
+]
 
 [dependencies]
 colored = "3.0"
