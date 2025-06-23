@@ -2,9 +2,14 @@
 Read, bump, write, commit and tag versions, automatically, in one line!
 
 ## Installation
-Install
-[cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) and
-then:
+Install [cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html).
+
+### Using Cargo (recommended)
+```bash
+> cargo install bump-version
+```
+
+### Building from source
 ```bash
 > git clone https://github.com/ssiyad/bump-version
 > cd bump-version
